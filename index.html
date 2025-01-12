@@ -6,60 +6,70 @@
   <title>University of Southern Queensland - AI Powered Cleaning Checklist</title>
 
   <!-- 
-    ============================================
-    BRANDING & STYLE (Minimal inlined CSS for FAST loading)
-    Based on the attached USQ branding:
+    =====================================================================
+    BRANDING & STYLE (Inlined for FAST load)
+    Based on attached USQ branding:
       - Gold/Orange: #F8AB23
-      - Purple text: #4F2B7C
+      - Purple: #4F2B7C
       - Neutral/dark text: #333333
-    Suggested font: 'Open Sans', 'Montserrat', or a similar clean sans-serif.
-    ============================================
+    Suggested font: 'Open Sans', sans-serif (approx. matching USQ style)
+    =====================================================================
   -->
   <style>
-    /* Basic Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Minimal Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Open Sans', 'Montserrat', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       color: #333333;
       background-color: #ffffff;
       line-height: 1.4;
     }
 
-    /* Header / Branding */
+    /* Header with brand */
     header {
       display: flex;
       align-items: center;
       padding: 1rem;
       background-color: #ffffff;
-      border-bottom: 3px solid #F8AB23; /* USQ gold/orange accent */
+      border-bottom: 3px solid #F8AB23;
     }
     .brand-logo {
-      /* Replace with an <img> if you have the actual logo file */
-      width: 50px; 
+      /* Placeholder circle; replace with an <img> if you have the real logo */
+      width: 50px;
       height: 50px;
-      background-color: #F8AB23; 
+      background-color: #F8AB23;
       border-radius: 50%;
       margin-right: 1rem;
     }
     .brand-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4F2B7C; /* USQ purple */
+      color: #4F2B7C;
     }
 
-    /* Introduction banner */
+    /* Introduction Banner */
     .intro {
       text-align: center;
       padding: 1.5rem 1rem;
       background-color: #F8AB23;
       color: #ffffff;
     }
-    .intro h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .intro p { font-size: 1rem; }
+    .intro h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .intro p {
+      font-size: 1rem;
+    }
 
     /* Main Form Container */
     .checklist-form {
-      max-width: 800px;
+      max-width: 900px;
       width: 95%;
       margin: 1rem auto 2rem auto;
       padding: 1rem;
@@ -67,36 +77,98 @@
       border-radius: 8px;
     }
 
-    /* Area Sections */
-    .area-section { margin-bottom: 2rem; }
+    /* Area Section */
+    .area-section {
+      margin-bottom: 2rem;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 1rem;
+      position: relative; /* for possible note overlay */
+      background-color: #fafafa;
+    }
+
+    /* Area Header row with the note & question mark */
     .area-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 0.5rem;
     }
-    .area-header h3 {
+    .area-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .area-header-left h3 {
       font-size: 1.25rem;
       color: #4F2B7C;
+      margin-bottom: 0.2rem;
     }
+    .note-badge {
+      background: linear-gradient(135deg, #4F2B7C, #7B5CA5);
+      color: #ffffff;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      display: inline-block;
+      margin-top: 0.2rem;
+    }
+    .note-badge span {
+      font-weight: bold;
+    }
+
+    /* The (?) symbol and the info popup */
+    .area-info-trigger {
+      color: #F8AB23;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 0.25rem;
+    }
+    .info-popup {
+      display: none;
+      position: absolute;
+      top: 2rem;
+      right: 1rem;
+      width: 300px;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #4F2B7C, #7B5CA5);
+      color: #ffffff;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      z-index: 999; /* above everything else */
+    }
+    .info-popup strong {
+      color: #F8AB23;
+    }
+    .info-popup::before {
+      content: "";
+      position: absolute;
+      top: -10px; /* arrow from top */
+      right: 20px;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #4F2B7C transparent;
+    }
+
     .toggle-btn {
       background-color: #4F2B7C;
       color: #ffffff;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 4px;
-      font-size: 0.9rem;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     .toggle-btn:hover {
       background-color: #3A2156;
     }
 
-    /* Task Tables */
+    /* Tables for tasks */
     .task-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 1rem;
+      margin-top: 0.5rem;
     }
     .task-table th, .task-table td {
       border: 1px solid #ccc;
@@ -110,27 +182,44 @@
       text-align: left;
     }
     .task-table td {
-      font-size: 1rem; /* Increase task text size for easy reading */
+      font-size: 1rem; /* bigger so it's visible from a distance */
     }
     .comment-box {
       width: 100%;
       height: 60px;
       resize: vertical;
+      margin-top: 0.2rem;
     }
 
-    /* File Upload Label */
-    .upload-label {
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-top: 0.5rem;
-      display: inline-block;
-      color: #4F2B7C;
+    /* File upload style */
+    .upload-container {
+      margin-top: 0.75rem;
     }
     .file-upload {
-      margin: 0.5rem 0 1rem 0;
+      display: block;
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+
+      /* Give a pulsing animation to draw attention */
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(248,171,35,0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(248,171,35,0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(248,171,35,0);
+      }
     }
 
-    /* Tips Container */
+    /* Tips container at the bottom of each area */
     .tips-container {
       display: flex;
       gap: 2rem;
@@ -138,6 +227,7 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       padding: 1rem;
+      margin-top: 1rem;
     }
     .tips-sub {
       flex: 1;
@@ -153,7 +243,7 @@
       font-size: 0.875rem;
     }
 
-    /* Progress Bar */
+    /* Progress bar */
     .progress-container {
       width: 100%;
       background-color: #eee;
@@ -168,12 +258,13 @@
       transition: width 0.3s;
     }
 
-    /* Form Actions */
+    /* Form actions */
     .form-actions {
       text-align: center;
       margin-top: 1rem;
     }
-    .submit-btn, .reset-btn {
+    .submit-btn,
+    .reset-btn {
       display: inline-block;
       margin: 0.5rem;
       padding: 0.75rem 1.5rem;
@@ -198,7 +289,7 @@
       background-color: #C67E1B;
     }
 
-    /* Disclaimer & Subscription */
+    /* Disclaimer about free tier */
     .disclaimer {
       font-size: 0.875rem;
       color: #4F2B7C;
@@ -219,7 +310,7 @@
       background-color: #3A2156;
     }
 
-    /* Footer */
+    /* Footer with contact details */
     footer {
       text-align: center;
       background-color: #f2f2f2;
@@ -228,12 +319,24 @@
       color: #555555;
     }
 
-    /* Responsive */
+    /* Responsive design */
     @media (max-width: 600px) {
-      .area-header h3 { font-size: 1.1rem; }
-      .toggle-btn { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
-      .tips-container { flex-direction: column; }
-      .tips-sub { margin-bottom: 1rem; }
+      .area-header-left h3 {
+        font-size: 1.1rem;
+      }
+      .toggle-btn {
+        font-size: 0.8rem;
+      }
+      .tips-container {
+        flex-direction: column;
+      }
+      .tips-sub {
+        margin-bottom: 1rem;
+      }
+      .info-popup {
+        width: 85%;
+        right: 5%;
+      }
     }
   </style>
 </head>
@@ -241,7 +344,6 @@
 
   <!-- HEADER -->
   <header>
-    <!-- Placeholder brand logo (colored circle) -->
     <div class="brand-logo"></div>
     <div class="brand-title">University of Southern Queensland</div>
   </header>
@@ -249,33 +351,58 @@
   <!-- INTRODUCTION -->
   <section class="intro">
     <h2>AI Powered Cleaning Checklist</h2>
-    <p>Smart solutions to keep your university clean and sanitary!</p>
+    <p>Optimize your cleaning routine with our adaptive, intelligent solution.</p>
   </section>
 
   <!-- 
-    5) FORM SUBMISSION (Formspree)
-    action="https://formspree.io/f/xeoovlzy"
-    method="POST" enctype="multipart/form-data"
-    Facility type: University 
+    5) FORM SUBMISSION DETAILS 
+    - Using Formspree action: https://formspree.io/f/xeoovlzy
+    - method=POST, enctype=multipart/form-data
+    - If user tries to upload a photo, free tier does not allow => redirect to subscription
+    - If # submissions > 50 => redirect to subscription
   -->
   <form class="checklist-form" id="cleaningChecklistForm"
         action="https://formspree.io/f/xeoovlzy"
         method="POST"
         enctype="multipart/form-data">
 
-    <!-- Example facility: University 
-         We'll define 3 areas: Classrooms, Offices, Restrooms
-    -->
+    <!-- PROGRESS BAR (top or bottom, design choice) -->
+    <div class="progress-container">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
 
-    <!-- ========== CLASSROOMS AREA ========== -->
-    <div class="area-section" id="classrooms-area">
+    <!-- AREA 1: CLASSROOMS -->
+    <div class="area-section" id="classrooms-section">
       <div class="area-header">
-        <h3>Classrooms</h3>
-        <button type="button" class="toggle-btn" onclick="toggleArea('classrooms')">
-          Switch to Deep Cleaning
-        </button>
+        <div class="area-header-left">
+          <h3>Classrooms</h3>
+          <span class="note-badge">
+            <span>!</span> List will change depending on the previous submission
+          </span>
+        </div>
+        <!-- (?) icon triggers a popup -->
+        <div>
+          <span class="area-info-trigger" onclick="toggleInfoPopup('classroomsInfo')">
+            (?)
+          </span>
+          <button type="button" class="toggle-btn" onclick="toggleArea('classrooms')">
+            Switch to Deep Cleaning
+          </button>
+        </div>
+
+        <!-- Info popup for the area -->
+        <div class="info-popup" id="classroomsInfo">
+          <p>
+            “Our smart lists will factor in your previous submission. We look at 
+            what was done, the frequency, and photos (if any) to adjust tasks 
+            for next time. 
+            <br/><br/>
+            <strong>Requires subscription</strong> for advanced AI photo analysis.”
+          </p>
+        </div>
       </div>
-      <!-- Standard Cleaning (default view) -->
+
+      <!-- Standard table -->
       <table class="task-table" id="classroomsStandard" style="display: table;">
         <thead>
           <tr>
@@ -286,7 +413,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>Wipe desks & chairs</td>
+            <td>Wipe desks and chairs</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_std_task1"></textarea></td>
           </tr>
@@ -313,7 +440,7 @@
         </tbody>
       </table>
 
-      <!-- Deep Cleaning (hidden by default) -->
+      <!-- Deep table -->
       <table class="task-table" id="classroomsDeep" style="display: none;">
         <thead>
           <tr>
@@ -323,14 +450,14 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Standard tasks repeated or enhanced, plus 3 extra deep tasks -->
+          <!-- Standard tasks repeated or combined, plus extra deep tasks -->
           <tr>
-            <td>Wipe desks & chairs thoroughly (including undersides)</td>
+            <td>Wipe desks/chairs thoroughly (undersides, legs)</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task1"></textarea></td>
           </tr>
           <tr>
-            <td>Shampoo / steam clean carpets or floors</td>
+            <td>Shampoo or steam floors/carpets</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task2"></textarea></td>
           </tr>
@@ -339,57 +466,79 @@
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task3"></textarea></td>
           </tr>
-          <!-- Extra Deep tasks (3) -->
+          <!-- Extra deep tasks -->
           <tr>
-            <td>Sanitize all electronic equipment (projectors, etc.)</td>
+            <td>Disinfect all electronic equipment (projectors, screens)</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task4"></textarea></td>
           </tr>
           <tr>
-            <td>Clean & disinfect window blinds / curtains</td>
+            <td>Dust & clean vents, fans, or AC units</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task5"></textarea></td>
           </tr>
           <tr>
-            <td>Dust & clean vents / ceiling fans</td>
+            <td>Organize & wipe down supply cabinets</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="classrooms_deep_task6"></textarea></td>
           </tr>
         </tbody>
       </table>
 
-      <label class="upload-label">Upload Photo (Classrooms)</label>
-      <input class="file-upload" type="file" name="classrooms_photo" accept="image/*" />
+      <!-- Upload Photo (Classrooms) -->
+      <div class="upload-container">
+        <input class="file-upload" type="file" name="classrooms_photo" accept="image/*" />
+      </div>
 
       <!-- Tips container -->
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
-            <li>Use low-odor disinfectants for a pleasant environment</li>
             <li>Clean desk surfaces daily to reduce germs</li>
+            <li>Use low-odor disinfectants for a pleasant environment</li>
           </ul>
         </div>
         <div class="tips-sub">
           <h4>2 Things to Avoid</h4>
           <ul>
-            <li>Using the same cloth for desks and floors</li>
+            <li>Using the same cloth for floor and desk surfaces</li>
             <li>Skipping high-touch items (light switches, doorknobs)</li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- END CLASSROOMS -->
+    <!-- END CLASSROOMS AREA -->
 
-    <!-- ========== OFFICES AREA ========== -->
-    <div class="area-section" id="offices-area">
+    <!-- AREA 2: OFFICES -->
+    <div class="area-section" id="offices-section">
       <div class="area-header">
-        <h3>Offices</h3>
-        <button type="button" class="toggle-btn" onclick="toggleArea('offices')">
-          Switch to Deep Cleaning
-        </button>
+        <div class="area-header-left">
+          <h3>Offices</h3>
+          <span class="note-badge">
+            <span>!</span> List will change depending on the previous submission
+          </span>
+        </div>
+        <div>
+          <span class="area-info-trigger" onclick="toggleInfoPopup('officesInfo')">
+            (?)
+          </span>
+          <button type="button" class="toggle-btn" onclick="toggleArea('offices')">
+            Switch to Deep Cleaning
+          </button>
+        </div>
+        <div class="info-popup" id="officesInfo">
+          <p>
+            “Our smart lists will factor in your previous submission. We look at 
+            what was done, the frequency, and photos (if any) to adjust tasks 
+            for next time. 
+            <br/><br/>
+            <strong>Requires subscription</strong> for advanced AI photo analysis.”
+          </p>
+        </div>
       </div>
-      <!-- Standard -->
+
+      <!-- Standard table -->
       <table class="task-table" id="officesStandard" style="display: table;">
         <thead>
           <tr>
@@ -420,14 +569,14 @@
             <td><textarea class="comment-box" name="offices_std_task4"></textarea></td>
           </tr>
           <tr>
-            <td>Disinfect door handles</td>
+            <td>Disinfect door handles & light switches</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="offices_std_task5"></textarea></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Deep -->
+      <!-- Deep table -->
       <table class="task-table" id="officesDeep" style="display: none;">
         <thead>
           <tr>
@@ -438,12 +587,12 @@
         </thead>
         <tbody>
           <tr>
-            <td>Thoroughly disinfect desktops & chairs</td>
+            <td>Disinfect desks & chairs thoroughly</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="offices_deep_task1"></textarea></td>
           </tr>
           <tr>
-            <td>Clean windows (interior)</td>
+            <td>Clean interior windows</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="offices_deep_task2"></textarea></td>
           </tr>
@@ -459,26 +608,27 @@
             <td><textarea class="comment-box" name="offices_deep_task4"></textarea></td>
           </tr>
           <tr>
-            <td>Clean air vents & filters</td>
+            <td>Clean vents & filters (if accessible)</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="offices_deep_task5"></textarea></td>
           </tr>
           <tr>
-            <td>Detail cleaning in corners & under furniture</td>
+            <td>Detailed corner & under-furniture vacuum</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="offices_deep_task6"></textarea></td>
           </tr>
         </tbody>
       </table>
 
-      <label class="upload-label">Upload Photo (Offices)</label>
-      <input class="file-upload" type="file" name="offices_photo" accept="image/*" />
+      <div class="upload-container">
+        <input class="file-upload" type="file" name="offices_photo" accept="image/*" />
+      </div>
 
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
-            <li>Encourage clean desk policies</li>
+            <li>Encourage clear desk policies</li>
             <li>Use eco-friendly cleaning products</li>
           </ul>
         </div>
@@ -486,22 +636,42 @@
           <h4>2 Things to Avoid</h4>
           <ul>
             <li>Using one rag for all surfaces</li>
-            <li>Ignoring high-traffic areas (floors, entryways)</li>
+            <li>Ignoring high-traffic, high-touch areas</li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- END OFFICES -->
+    <!-- END OFFICES AREA -->
 
-    <!-- ========== RESTROOMS AREA ========== -->
-    <div class="area-section" id="restrooms-area">
+    <!-- AREA 3: RESTROOMS -->
+    <div class="area-section" id="restrooms-section">
       <div class="area-header">
-        <h3>Restrooms</h3>
-        <button type="button" class="toggle-btn" onclick="toggleArea('restrooms')">
-          Switch to Deep Cleaning
-        </button>
+        <div class="area-header-left">
+          <h3>Restrooms</h3>
+          <span class="note-badge">
+            <span>!</span> List will change depending on the previous submission
+          </span>
+        </div>
+        <div>
+          <span class="area-info-trigger" onclick="toggleInfoPopup('restroomsInfo')">
+            (?)
+          </span>
+          <button type="button" class="toggle-btn" onclick="toggleArea('restrooms')">
+            Switch to Deep Cleaning
+          </button>
+        </div>
+        <div class="info-popup" id="restroomsInfo">
+          <p>
+            “Our smart lists will factor in your previous submission. We look at 
+            what was done, the frequency, and photos (if any) to adjust tasks 
+            for next time. 
+            <br/><br/>
+            <strong>Requires subscription</strong> for advanced AI photo analysis.”
+          </p>
+        </div>
       </div>
-      <!-- Standard -->
+
+      <!-- Standard table -->
       <table class="task-table" id="restroomsStandard" style="display: table;">
         <thead>
           <tr>
@@ -538,7 +708,8 @@
           </tr>
         </tbody>
       </table>
-      <!-- Deep -->
+
+      <!-- Deep table -->
       <table class="task-table" id="restroomsDeep" style="display: none;">
         <thead>
           <tr>
@@ -575,102 +746,105 @@
             <td><textarea class="comment-box" name="restrooms_deep_task5"></textarea></td>
           </tr>
           <tr>
-            <td>Check for mold in hidden corners</td>
+            <td>Check for mold & mildew in corners</td>
             <td><input type="checkbox" class="task-check" /></td>
             <td><textarea class="comment-box" name="restrooms_deep_task6"></textarea></td>
           </tr>
         </tbody>
       </table>
 
-      <label class="upload-label">Upload Photo (Restrooms)</label>
-      <input class="file-upload" type="file" name="restrooms_photo" accept="image/*" />
+      <div class="upload-container">
+        <input class="file-upload" type="file" name="restrooms_photo" accept="image/*" />
+      </div>
 
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
-            <li>Use color-coded cleaning tools for sanitary areas</li>
-            <li>Frequent disinfection on high-touch surfaces</li>
+            <li>Use color-coded cleaning tools for restrooms</li>
+            <li>Keep daily logs to maintain cleanliness</li>
           </ul>
         </div>
         <div class="tips-sub">
           <h4>2 Things to Avoid</h4>
           <ul>
-            <li>Mixing harsh chemicals (dangerous fumes)</li>
-            <li>Skipping routine checks for supplies</li>
+            <li>Mixing strong chemicals (dangerous fumes)</li>
+            <li>Overlooking supply refills (soap, paper)</li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- END RESTROOMS -->
+    <!-- END RESTROOMS AREA -->
 
-    <!-- PROGRESS BAR -->
-    <div class="progress-container">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-
-    <!-- FORM ACTIONS -->
+    <!-- FORM ACTION BUTTONS -->
     <div class="form-actions">
-      <button type="submit" class="submit-btn">
-        &#10003; Submit Checklist
-      </button>
+      <button type="submit" class="submit-btn">&#10003; Submit Checklist</button>
       <button type="button" class="reset-btn" onclick="resetForm()">
         &#10007; Reset Checklist
       </button>
     </div>
 
-    <!-- DISCLAIMER / FREE TIER NOTICE -->
+    <!-- DISCLAIMER / FREE TIER -->
     <div class="disclaimer">
-      <p><strong>Free tier limit:</strong> 50 submissions per month and no photos allowed.</p>
-      <p>To increase your limit and enable photo uploads, please subscribe.</p>
+      <p><strong>Free tier limit:</strong> 50 submissions per month and no photos allowed. </p>
+      <p>If you need more or want photo-based AI features, please subscribe.</p>
       <button type="button" onclick="goToSubscription()">
         Go to Subscription Page
       </button>
     </div>
   </form>
 
-  <!-- FOOTER with contact details -->
+  <!-- FOOTER with brand contact details -->
   <footer>
     <p>&copy; 2025 University of Southern Queensland. All rights reserved.</p>
     <p>Contact: (07) 4631 2100 | <a href="https://usq.edu.au" target="_blank">usq.edu.au</a></p>
   </footer>
 
   <!-- 
-    ==================================================
-    JAVASCRIPT (inlined for FAST load)
-    - Toggling standard/deep cleaning
-    - Handling progress bar
-    - Checking submission constraints (photos & submission count)
+    =================================================
+    JAVASCRIPT (Inlined for FAST load)
+    - Toggle standard/deep cleaning
+    - Toggle info popups
+    - Handle progress bar
+    - Submission constraints (photo & submission count)
     - Reset form
-    - Subscription redirect
-    ==================================================
+    - Redirect to subscription
+    =================================================
   -->
   <script>
-    // Track which mode is shown for each area
+    // Track standard vs. deep cleaning for each area
     const areaModes = {
       classrooms: 'standard',
       offices: 'standard',
       restrooms: 'standard'
     };
 
-    // Toggle function
+    // Toggle between Standard/Deep
     function toggleArea(areaId) {
-      const standardTable = document.getElementById(areaId + 'Standard');
-      const deepTable = document.getElementById(areaId + 'Deep');
+      const std = document.getElementById(areaId + 'Standard');
+      const deep = document.getElementById(areaId + 'Deep');
       if (areaModes[areaId] === 'standard') {
-        // Switch to Deep
-        standardTable.style.display = 'none';
-        deepTable.style.display = 'table';
+        std.style.display = 'none';
+        deep.style.display = 'table';
         areaModes[areaId] = 'deep';
         event.target.textContent = 'Switch to Standard Cleaning';
       } else {
-        // Switch to Standard
-        standardTable.style.display = 'table';
-        deepTable.style.display = 'none';
+        std.style.display = 'table';
+        deep.style.display = 'none';
         areaModes[areaId] = 'standard';
         event.target.textContent = 'Switch to Deep Cleaning';
       }
       updateProgress();
+    }
+
+    // Toggle info popup
+    function toggleInfoPopup(popupId) {
+      const popup = document.getElementById(popupId);
+      if (popup.style.display === 'none' || popup.style.display === '') {
+        popup.style.display = 'block';
+      } else {
+        popup.style.display = 'none';
+      }
     }
 
     // PROGRESS BAR
@@ -682,46 +856,54 @@
     });
 
     function updateProgress() {
-      const totalTasks = checkboxes.length;
+      let total = checkboxes.length;
       let completed = 0;
-      checkboxes.forEach(cb => { if (cb.checked) completed++; });
-      const percent = totalTasks > 0 ? (completed / totalTasks) * 100 : 0;
+      checkboxes.forEach(c => {
+        if (c.checked) completed++;
+      });
+      let percent = total > 0 ? (completed / total) * 100 : 0;
       progressFill.style.width = percent + '%';
     }
 
     // RESET FORM
     function resetForm() {
-      // Uncheck checkboxes
-      checkboxes.forEach(cb => { cb.checked = false; });
+      // Uncheck boxes
+      checkboxes.forEach(cb => {
+        cb.checked = false;
+      });
       // Clear textareas
-      document.querySelectorAll('.comment-box').forEach(txt => { txt.value = ''; });
-      // Clear file inputs
-      document.querySelectorAll('.file-upload').forEach(fi => { fi.value = ''; });
-      // Reset toggles to standard
+      const textareas = document.querySelectorAll('.comment-box');
+      textareas.forEach(ta => ta.value = '');
+      // Clear file uploads
+      const files = document.querySelectorAll('.file-upload');
+      files.forEach(f => { f.value = ''; });
+      // Reset area toggles
       for (let key in areaModes) {
         areaModes[key] = 'standard';
-        const std = document.getElementById(key + 'Standard');
-        const deep = document.getElementById(key + 'Deep');
-        std.style.display = 'table';
-        deep.style.display = 'none';
+        document.getElementById(key + 'Standard').style.display = 'table';
+        document.getElementById(key + 'Deep').style.display = 'none';
       }
       // Reset toggle button text
-      document.querySelectorAll('.toggle-btn').forEach(btn => {
+      const toggleButtons = document.querySelectorAll('.toggle-btn');
+      toggleButtons.forEach(btn => {
         btn.textContent = 'Switch to Deep Cleaning';
       });
+      // Hide all popups
+      const popups = document.querySelectorAll('.info-popup');
+      popups.forEach(p => p.style.display = 'none');
       // Update progress
       updateProgress();
     }
 
-    // SUBSCRIPTION REDIRECT
+    // SUBSCRIPTION PAGE REDIRECT
     function goToSubscription() {
       window.location.href = 'https://sprucesaustralia.github.io/subscribepage/index.html';
     }
 
-    // FORM SUBMISSION CHECK
+    // Handle form submission constraints
     const form = document.getElementById('cleaningChecklistForm');
     form.addEventListener('submit', function(e) {
-      // 1) Check if user has uploaded any photos
+      // 1) Check if any file is uploaded
       const fileUploads = document.querySelectorAll('.file-upload');
       let hasPhoto = false;
       fileUploads.forEach(upload => {
@@ -729,30 +911,28 @@
           hasPhoto = true;
         }
       });
-
-      // 2) Free tier = no photos allowed
-      //    If user tries to upload, redirect to subscription
+      // If has photo => free tier does not allow => redirect
       if (hasPhoto) {
         e.preventDefault();
         goToSubscription();
-        return; 
+        return;
       }
 
-      // 3) Check submission count via localStorage
+      // 2) Check submission count from localStorage
       let submissionCount = localStorage.getItem('usq_submissions') || 0;
       submissionCount = parseInt(submissionCount, 10);
 
-      // Free tier: Only up to 50 submissions
       if (submissionCount >= 50) {
+        // Over free tier limit => redirect
         e.preventDefault();
         goToSubscription();
       } else {
-        // Increment and allow the form to submit
+        // Otherwise, let them submit, increment count
         localStorage.setItem('usq_submissions', submissionCount + 1);
       }
     });
 
-    // Initialize progress bar on load
+    // Initialize progress on load
     updateProgress();
   </script>
 </body>
