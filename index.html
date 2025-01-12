@@ -8,11 +8,11 @@
   <!-- 
     =====================================================================
     BRANDING & STYLE (Inlined for FAST load)
-    Based on attached USQ branding:
+    Matching USQ style:
       - Gold/Orange: #F8AB23
       - Purple: #4F2B7C
       - Neutral/dark text: #333333
-    Suggested font: 'Open Sans', sans-serif (approx. matching USQ style)
+    Suggested font: 'Open Sans', sans-serif
     =====================================================================
   -->
   <style>
@@ -27,23 +27,42 @@
       font-family: 'Open Sans', sans-serif;
       color: #333333;
       background-color: #ffffff;
-      line-height: 1.4;
+      line-height: 1.5;
+      padding-top: 40px; /* Space for fixed progress bar */
     }
 
-    /* Header with brand */
+    /* Fixed Progress Bar at Top */
+    #progressBarContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #e0e0e0;
+      height: 10px;
+      z-index: 999;
+      overflow: hidden;
+    }
+    #progressBarFill {
+      height: 100%;
+      width: 0%;
+      background-color: #4F2B7C;
+      transition: width 0.3s ease;
+    }
+
+    /* Header / Branding */
     header {
       display: flex;
       align-items: center;
       padding: 1rem;
       background-color: #ffffff;
-      border-bottom: 3px solid #F8AB23;
+      border-bottom: 3px solid #F8AB23; /* Gold accent line */
     }
     .brand-logo {
       /* Placeholder circle; replace with an <img> if you have the real logo */
       width: 50px;
       height: 50px;
-      background-color: #F8AB23;
       border-radius: 50%;
+      background-color: #F8AB23;
       margin-right: 1rem;
     }
     .brand-title {
@@ -71,28 +90,27 @@
     .checklist-form {
       max-width: 900px;
       width: 95%;
-      margin: 1rem auto 2rem auto;
+      margin: 1.5rem auto;
       padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
     }
 
-    /* Area Section */
+    /* Area Sections */
     .area-section {
       margin-bottom: 2rem;
       border: 1px solid #eee;
       border-radius: 6px;
       padding: 1rem;
-      position: relative; /* for possible note overlay */
       background-color: #fafafa;
+      position: relative;
     }
 
-    /* Area Header row with the note & question mark */
     .area-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
     .area-header-left {
       display: flex;
@@ -102,53 +120,49 @@
     .area-header-left h3 {
       font-size: 1.25rem;
       color: #4F2B7C;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.3rem;
     }
-    .note-badge {
+    .smart-note {
       background: linear-gradient(135deg, #4F2B7C, #7B5CA5);
       color: #ffffff;
       font-size: 0.8rem;
       border-radius: 4px;
-      padding: 0.2rem 0.4rem;
+      padding: 0.3rem 0.5rem;
       display: inline-block;
-      margin-top: 0.2rem;
     }
-    .note-badge span {
-      font-weight: bold;
-    }
-
-    /* The (?) symbol and the info popup */
-    .area-info-trigger {
+    .smart-note .info-trigger {
       color: #F8AB23;
+      margin-left: 0.2rem;
       font-weight: bold;
       cursor: pointer;
-      margin-left: 0.25rem;
     }
+
+    /* Info popup (hidden by default) */
     .info-popup {
       display: none;
       position: absolute;
-      top: 2rem;
+      top: 3rem; /* just below area header */
       right: 1rem;
-      width: 300px;
-      padding: 0.75rem;
+      width: 320px;
       background: linear-gradient(135deg, #4F2B7C, #7B5CA5);
       color: #ffffff;
-      font-size: 0.9rem;
       border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-      z-index: 999; /* above everything else */
-    }
-    .info-popup strong {
-      color: #F8AB23;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      z-index: 999;
     }
     .info-popup::before {
       content: "";
       position: absolute;
-      top: -10px; /* arrow from top */
+      top: -10px;
       right: 20px;
       border-width: 0 10px 10px 10px;
       border-style: solid;
       border-color: transparent transparent #4F2B7C transparent;
+    }
+    .info-popup strong {
+      color: #F8AB23;
     }
 
     .toggle-btn {
@@ -168,7 +182,7 @@
     .task-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 0.5rem;
+      margin-bottom: 1rem;
     }
     .task-table th, .task-table td {
       border: 1px solid #ccc;
@@ -178,48 +192,113 @@
     .task-table th {
       background-color: #F8AB23;
       color: #ffffff;
-      font-size: 1rem;
       text-align: left;
+      font-size: 1rem;
     }
     .task-table td {
-      font-size: 1rem; /* bigger so it's visible from a distance */
+      font-size: 1rem; /* Larger so it's visible from a distance */
+      position: relative;
     }
+
+    /* Instead of a standard checkbox, we create a large clickable button that toggles */
+    .task-check-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background-color: #eee;
+      border: none;
+      padding: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border-radius: 4px;
+      color: #333;
+      font-weight: 600;
+    }
+    .task-check-button.checked {
+      background-color: #4F2B7C;
+      color: #fff;
+    }
+    .task-check-button:hover {
+      background-color: #ddd;
+    }
+    .task-check-button.checked:hover {
+      background-color: #3A2156;
+    }
+
+    /* Comment box under each task */
     .comment-box {
       width: 100%;
       height: 60px;
       resize: vertical;
-      margin-top: 0.2rem;
+      margin-top: 0.4rem;
     }
 
-    /* File upload style */
+    /* Photo Upload Container */
     .upload-container {
-      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-    .file-upload {
-      display: block;
-      width: 100%;
-      padding: 0.6rem;
+    .upload-btn {
+      position: relative;
+      flex: 1 1 60%;
+      display: inline-block;
+      text-align: center;
+      padding: 0.8rem;
       font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #4F2B7C;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
 
-      /* Give a pulsing animation to draw attention */
+      /* Pulsing animation to draw attention */
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
       0% {
-        box-shadow: 0 0 0 0 rgba(248,171,35,0.4);
+        box-shadow: 0 0 0 0 rgba(79,43,124,0.4);
       }
       70% {
-        box-shadow: 0 0 0 10px rgba(248,171,35,0);
+        box-shadow: 0 0 0 20px rgba(79,43,124,0);
       }
       100% {
-        box-shadow: 0 0 0 0 rgba(248,171,35,0);
+        box-shadow: 0 0 0 0 rgba(79,43,124,0);
       }
     }
+    .upload-btn input[type="file"] {
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .remove-photo-btn {
+      flex: 1 1 auto;
+      background-color: #F8AB23;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.8rem;
+      cursor: pointer;
+    }
+    .remove-photo-btn:hover {
+      background-color: #C67E1B;
+    }
+    .file-chosen {
+      font-size: 0.875rem;
+      color: #4F2B7C;
+      margin-top: 0.5rem;
+    }
 
-    /* Tips container at the bottom of each area */
+    /* Tips Container */
     .tips-container {
       display: flex;
       gap: 2rem;
@@ -227,7 +306,6 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       padding: 1rem;
-      margin-top: 1rem;
     }
     .tips-sub {
       flex: 1;
@@ -239,32 +317,16 @@
     }
     .tips-sub ul {
       list-style: disc;
-      margin-left: 1.5rem;
+      margin-left: 1.2rem;
       font-size: 0.875rem;
     }
 
-    /* Progress bar */
-    .progress-container {
-      width: 100%;
-      background-color: #eee;
-      border-radius: 8px;
-      margin: 1rem 0;
-      overflow: hidden;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 20px;
-      background-color: #4F2B7C;
-      transition: width 0.3s;
-    }
-
-    /* Form actions */
+    /* Form Actions */
     .form-actions {
       text-align: center;
-      margin-top: 1rem;
+      margin-top: 2rem;
     }
-    .submit-btn,
-    .reset-btn {
+    .submit-btn, .reset-btn {
       display: inline-block;
       margin: 0.5rem;
       padding: 0.75rem 1.5rem;
@@ -289,7 +351,7 @@
       background-color: #C67E1B;
     }
 
-    /* Disclaimer about free tier */
+    /* Disclaimer */
     .disclaimer {
       font-size: 0.875rem;
       color: #4F2B7C;
@@ -310,22 +372,26 @@
       background-color: #3A2156;
     }
 
-    /* Footer with contact details */
+    /* Footer */
     footer {
       text-align: center;
       background-color: #f2f2f2;
       padding: 1rem;
       font-size: 0.875rem;
       color: #555555;
+      margin-top: 2rem;
     }
 
-    /* Responsive design */
+    /* Responsive: smaller screens */
     @media (max-width: 600px) {
-      .area-header-left h3 {
-        font-size: 1.1rem;
+      .upload-container {
+        flex-direction: column;
+        align-items: stretch;
       }
-      .toggle-btn {
-        font-size: 0.8rem;
+      .upload-btn,
+      .remove-photo-btn {
+        flex: 1 1 auto;
+        margin-bottom: 0.5rem;
       }
       .tips-container {
         flex-direction: column;
@@ -334,13 +400,18 @@
         margin-bottom: 1rem;
       }
       .info-popup {
-        width: 85%;
-        right: 5%;
+        width: 80%;
+        right: 10%;
       }
     }
   </style>
 </head>
 <body>
+
+  <!-- FIXED PROGRESS BAR -->
+  <div id="progressBarContainer">
+    <div id="progressBarFill"></div>
+  </div>
 
   <!-- HEADER -->
   <header>
@@ -351,425 +422,659 @@
   <!-- INTRODUCTION -->
   <section class="intro">
     <h2>AI Powered Cleaning Checklist</h2>
-    <p>Optimize your cleaning routine with our adaptive, intelligent solution.</p>
+    <p>Intelligent solutions for a cleaner campus!</p>
   </section>
 
   <!-- 
-    5) FORM SUBMISSION DETAILS 
-    - Using Formspree action: https://formspree.io/f/xeoovlzy
-    - method=POST, enctype=multipart/form-data
-    - If user tries to upload a photo, free tier does not allow => redirect to subscription
-    - If # submissions > 50 => redirect to subscription
+    5) FORM SUBMISSION
+    - Action = https://formspree.io/f/xeoovlzy
+    - method="POST", enctype="multipart/form-data"
+    - If photos => free tier not allowed => redirect
+    - If >= 50 submissions => redirect
+    - Otherwise, submit
   -->
   <form class="checklist-form" id="cleaningChecklistForm"
         action="https://formspree.io/f/xeoovlzy"
         method="POST"
         enctype="multipart/form-data">
 
-    <!-- PROGRESS BAR (top or bottom, design choice) -->
-    <div class="progress-container">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-
-    <!-- AREA 1: CLASSROOMS -->
-    <div class="area-section" id="classrooms-section">
+    <!-- EXAMPLE for a University: Classrooms, Offices, Restrooms -->
+    <!-- CLASSROOMS AREA -->
+    <div class="area-section" id="classroomsSection">
       <div class="area-header">
         <div class="area-header-left">
           <h3>Classrooms</h3>
-          <span class="note-badge">
-            <span>!</span> List will change depending on the previous submission
-          </span>
+          <div class="smart-note">
+            Smart list will change depending on when was your last service 
+            <span class="info-trigger" onclick="toggleInfoPopup('classroomsPopup')">(?)</span>
+          </div>
         </div>
-        <!-- (?) icon triggers a popup -->
-        <div>
-          <span class="area-info-trigger" onclick="toggleInfoPopup('classroomsInfo')">
-            (?)
-          </span>
-          <button type="button" class="toggle-btn" onclick="toggleArea('classrooms')">
-            Switch to Deep Cleaning
-          </button>
-        </div>
+        <button type="button" class="toggle-btn" onclick="toggleArea('classrooms')">
+          Switch to Deep Cleaning
+        </button>
 
-        <!-- Info popup for the area -->
-        <div class="info-popup" id="classroomsInfo">
-          <p>
-            “Our smart lists will factor in your previous submission. We look at 
-            what was done, the frequency, and photos (if any) to adjust tasks 
-            for next time. 
-            <br/><br/>
-            <strong>Requires subscription</strong> for advanced AI photo analysis.”
-          </p>
+        <!-- Info popup -->
+        <div class="info-popup" id="classroomsPopup">
+          “Our smart lists, will factor in your previous submission, look at when the last clean
+          was done, what was done and adjust this time’s tasks based on frequency. Also for certain
+          plans our system will analyse uploaded photos and make suggestions for the next visit.
+          <br/><br/>
+          <strong>Requires a subscription.</strong>”
         </div>
       </div>
 
-      <!-- Standard table -->
+      <!-- Standard (default) -->
       <table class="task-table" id="classroomsStandard" style="display: table;">
         <thead>
           <tr>
             <th>Standard Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Wipe desks and chairs</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_std_task1"></textarea></td>
+            <td>Wipe desks & chairs</td>
+            <td>
+              <!-- Custom checkbox button -->
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_std_task1"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Vacuum or sweep floors</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_std_task2"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_std_task2"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Clean whiteboards & markers area</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_std_task3"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_std_task3"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Empty trash bins</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_std_task4"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_std_task4"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Disinfect door handles</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_std_task5"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_std_task5"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Deep table -->
+      <!-- Deep (hidden by default) -->
       <table class="task-table" id="classroomsDeep" style="display: none;">
         <thead>
           <tr>
             <th>Deep Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Standard tasks repeated or combined, plus extra deep tasks -->
           <tr>
-            <td>Wipe desks/chairs thoroughly (undersides, legs)</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task1"></textarea></td>
+            <td>Clean desks/chairs thoroughly (including undersides)</td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task1"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Shampoo or steam floors/carpets</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task2"></textarea></td>
+            <td>Shampoo/steam floors/carpets</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task2"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Clean walls & windows (interior)</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task3"></textarea></td>
+            <td>Wash walls & windows (interior)</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task3"></textarea>
+            </td>
           </tr>
           <!-- Extra deep tasks -->
           <tr>
-            <td>Disinfect all electronic equipment (projectors, screens)</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task4"></textarea></td>
+            <td>Disinfect all electronic equipment</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task4"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Dust & clean vents, fans, or AC units</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task5"></textarea></td>
+            <td>Dust & clean vents, fans</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task5"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Organize & wipe down supply cabinets</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="classrooms_deep_task6"></textarea></td>
+            <td>Organize & wipe supply cabinets</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="classrooms_deep_task6"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Upload Photo (Classrooms) -->
+      <!-- Photo Upload (1 per area) -->
       <div class="upload-container">
-        <input class="file-upload" type="file" name="classrooms_photo" accept="image/*" />
+        <label class="upload-btn">
+          Upload Photo
+          <input type="file" name="classrooms_photo" accept="image/*" 
+                 onchange="showFileName(this, 'classroomsFileChosen')" />
+        </label>
+        <button type="button" class="remove-photo-btn"
+                onclick="removeFile('classrooms_photo','classroomsFileChosen')">
+          Remove Photo
+        </button>
       </div>
+      <div class="file-chosen" id="classroomsFileChosen"></div>
 
-      <!-- Tips container -->
+      <!-- Tips -->
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
             <li>Clean desk surfaces daily to reduce germs</li>
-            <li>Use low-odor disinfectants for a pleasant environment</li>
+            <li>Ensure frequent air circulation</li>
           </ul>
         </div>
         <div class="tips-sub">
           <h4>2 Things to Avoid</h4>
           <ul>
-            <li>Using the same cloth for floor and desk surfaces</li>
-            <li>Skipping high-touch items (light switches, doorknobs)</li>
+            <li>Using the same rag for desks & floors</li>
+            <li>Skipping high-touch areas (switches, doorknobs)</li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- END CLASSROOMS AREA -->
+    <!-- END CLASSROOMS -->
 
-    <!-- AREA 2: OFFICES -->
-    <div class="area-section" id="offices-section">
+    <!-- OFFICES AREA -->
+    <div class="area-section" id="officesSection">
       <div class="area-header">
         <div class="area-header-left">
           <h3>Offices</h3>
-          <span class="note-badge">
-            <span>!</span> List will change depending on the previous submission
-          </span>
+          <div class="smart-note">
+            Smart list will change depending on when was your last service
+            <span class="info-trigger" onclick="toggleInfoPopup('officesPopup')">(?)</span>
+          </div>
         </div>
-        <div>
-          <span class="area-info-trigger" onclick="toggleInfoPopup('officesInfo')">
-            (?)
-          </span>
-          <button type="button" class="toggle-btn" onclick="toggleArea('offices')">
-            Switch to Deep Cleaning
-          </button>
-        </div>
-        <div class="info-popup" id="officesInfo">
-          <p>
-            “Our smart lists will factor in your previous submission. We look at 
-            what was done, the frequency, and photos (if any) to adjust tasks 
-            for next time. 
-            <br/><br/>
-            <strong>Requires subscription</strong> for advanced AI photo analysis.”
-          </p>
+        <button type="button" class="toggle-btn" onclick="toggleArea('offices')">
+          Switch to Deep Cleaning
+        </button>
+
+        <!-- Info popup -->
+        <div class="info-popup" id="officesPopup">
+          “Our smart lists, will factor in your previous submission, look at when the last clean
+          was done, what was done and adjust this time’s tasks based on frequency.
+          <br/><br/>
+          <strong>Requires a subscription.</strong>”
         </div>
       </div>
 
-      <!-- Standard table -->
       <table class="task-table" id="officesStandard" style="display: table;">
         <thead>
           <tr>
             <th>Standard Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Dust desks & shelves</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_std_task1"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_std_task1"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Vacuum / mop floors</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_std_task2"></textarea></td>
+            <td>Vacuum/mop floors</td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_std_task2"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Wipe telephones & electronics</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_std_task3"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_std_task3"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Empty trash bins</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_std_task4"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_std_task4"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Disinfect door handles & light switches</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_std_task5"></textarea></td>
+            <td>Disinfect door handles</td>
+            <td>
+              <button type="button" class="task-check-button" 
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_std_task5"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Deep table -->
       <table class="task-table" id="officesDeep" style="display: none;">
         <thead>
           <tr>
             <th>Deep Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Disinfect desks & chairs thoroughly</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task1"></textarea></td>
+            <td>Thoroughly sanitize desks & chairs</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task1"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Clean interior windows</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task2"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task2"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Polish wooden furniture</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task3"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task3"></textarea>
+            </td>
           </tr>
           <!-- Extra deep tasks -->
           <tr>
-            <td>Sanitize keyboards & computer mice</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task4"></textarea></td>
+            <td>Sanitize keyboards & mice</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task4"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Clean vents & filters (if accessible)</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task5"></textarea></td>
+            <td>Clean vents & filters</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task5"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Detailed corner & under-furniture vacuum</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="offices_deep_task6"></textarea></td>
+            <td>Detail cleaning under furniture</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="offices_deep_task6"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <div class="upload-container">
-        <input class="file-upload" type="file" name="offices_photo" accept="image/*" />
+        <label class="upload-btn">
+          Upload Photo
+          <input type="file" name="offices_photo" accept="image/*"
+                 onchange="showFileName(this, 'officesFileChosen')" />
+        </label>
+        <button type="button" class="remove-photo-btn"
+                onclick="removeFile('offices_photo','officesFileChosen')">
+          Remove Photo
+        </button>
       </div>
+      <div class="file-chosen" id="officesFileChosen"></div>
 
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
-            <li>Encourage clear desk policies</li>
+            <li>Keep a clear-desk policy</li>
             <li>Use eco-friendly cleaning products</li>
           </ul>
         </div>
         <div class="tips-sub">
           <h4>2 Things to Avoid</h4>
           <ul>
+            <li>Ignoring electronics dust buildup</li>
             <li>Using one rag for all surfaces</li>
-            <li>Ignoring high-traffic, high-touch areas</li>
           </ul>
         </div>
       </div>
     </div>
     <!-- END OFFICES AREA -->
 
-    <!-- AREA 3: RESTROOMS -->
-    <div class="area-section" id="restrooms-section">
+    <!-- RESTROOMS AREA -->
+    <div class="area-section" id="restroomsSection">
       <div class="area-header">
         <div class="area-header-left">
           <h3>Restrooms</h3>
-          <span class="note-badge">
-            <span>!</span> List will change depending on the previous submission
-          </span>
+          <div class="smart-note">
+            Smart list will change depending on when was your last service 
+            <span class="info-trigger" onclick="toggleInfoPopup('restroomsPopup')">(?)</span>
+          </div>
         </div>
-        <div>
-          <span class="area-info-trigger" onclick="toggleInfoPopup('restroomsInfo')">
-            (?)
-          </span>
-          <button type="button" class="toggle-btn" onclick="toggleArea('restrooms')">
-            Switch to Deep Cleaning
-          </button>
-        </div>
-        <div class="info-popup" id="restroomsInfo">
-          <p>
-            “Our smart lists will factor in your previous submission. We look at 
-            what was done, the frequency, and photos (if any) to adjust tasks 
-            for next time. 
-            <br/><br/>
-            <strong>Requires subscription</strong> for advanced AI photo analysis.”
-          </p>
+        <button type="button" class="toggle-btn" onclick="toggleArea('restrooms')">
+          Switch to Deep Cleaning
+        </button>
+
+        <!-- Info popup -->
+        <div class="info-popup" id="restroomsPopup">
+          “Our smart lists, will factor in your previous submission, look at when the last clean
+          was done, what was done and adjust this time’s tasks based on frequency.
+          <br/><br/>
+          <strong>Requires a subscription.</strong>”
         </div>
       </div>
 
-      <!-- Standard table -->
       <table class="task-table" id="restroomsStandard" style="display: table;">
         <thead>
           <tr>
             <th>Standard Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Clean & disinfect toilets, urinals</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_std_task1"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_std_task1"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Wipe sinks & counters</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_std_task2"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_std_task2"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Mop floors</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_std_task3"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_std_task3"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Refill soap & paper dispensers</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_std_task4"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_std_task4"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Empty sanitary bins</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_std_task5"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_std_task5"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Deep table -->
       <table class="task-table" id="restroomsDeep" style="display: none;">
         <thead>
           <tr>
             <th>Deep Cleaning Tasks</th>
             <th>Done</th>
-            <th>Comments</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Descale toilets & urinals</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task1"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task1"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Steam clean floors & wall tiles</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task2"></textarea></td>
+            <td>Steam-clean floors & tiles</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task2"></textarea>
+            </td>
           </tr>
           <tr>
             <td>Sanitize partitions & doors thoroughly</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task3"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task3"></textarea>
+            </td>
           </tr>
           <!-- Extra deep tasks -->
           <tr>
             <td>Clean vent covers & ceiling fixtures</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task4"></textarea></td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task4"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Polish metal surfaces (faucets, etc.)</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task5"></textarea></td>
+            <td>Polish metal surfaces (faucets etc.)</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task5"></textarea>
+            </td>
           </tr>
           <tr>
-            <td>Check for mold & mildew in corners</td>
-            <td><input type="checkbox" class="task-check" /></td>
-            <td><textarea class="comment-box" name="restrooms_deep_task6"></textarea></td>
+            <td>Check for mold/mildew in hidden corners</td>
+            <td>
+              <button type="button" class="task-check-button"
+                      onclick="toggleTaskCheck(this)">
+                Mark Done
+              </button>
+            </td>
+            <td>
+              <textarea class="comment-box" name="restrooms_deep_task6"></textarea>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <div class="upload-container">
-        <input class="file-upload" type="file" name="restrooms_photo" accept="image/*" />
+        <label class="upload-btn">
+          Upload Photo
+          <input type="file" name="restrooms_photo" accept="image/*"
+                 onchange="showFileName(this, 'restroomsFileChosen')" />
+        </label>
+        <button type="button" class="remove-photo-btn"
+                onclick="removeFile('restrooms_photo','restroomsFileChosen')">
+          Remove Photo
+        </button>
       </div>
+      <div class="file-chosen" id="restroomsFileChosen"></div>
 
       <div class="tips-container">
         <div class="tips-sub">
           <h4>Top 2 Recommendations</h4>
           <ul>
-            <li>Use color-coded cleaning tools for restrooms</li>
-            <li>Keep daily logs to maintain cleanliness</li>
+            <li>Use color-coded tools for restroom cleaning</li>
+            <li>Frequent checks to keep supplies stocked</li>
           </ul>
         </div>
         <div class="tips-sub">
           <h4>2 Things to Avoid</h4>
           <ul>
-            <li>Mixing strong chemicals (dangerous fumes)</li>
-            <li>Overlooking supply refills (soap, paper)</li>
+            <li>Mixing harsh chemicals (dangerous fumes)</li>
+            <li>Overlooking high-touch surfaces (faucets, handles)</li>
           </ul>
         </div>
       </div>
@@ -779,160 +1084,199 @@
     <!-- FORM ACTION BUTTONS -->
     <div class="form-actions">
       <button type="submit" class="submit-btn">&#10003; Submit Checklist</button>
-      <button type="button" class="reset-btn" onclick="resetForm()">
+      <button type="button" class="reset-btn" onclick="resetChecklist()">
         &#10007; Reset Checklist
       </button>
     </div>
 
     <!-- DISCLAIMER / FREE TIER -->
     <div class="disclaimer">
-      <p><strong>Free tier limit:</strong> 50 submissions per month and no photos allowed. </p>
-      <p>If you need more or want photo-based AI features, please subscribe.</p>
-      <button type="button" onclick="goToSubscription()">
+      <p><strong>Free tier limit:</strong> 50 submissions per month & no photos allowed.</p>
+      <p>To upgrade and enjoy advanced features, please subscribe.</p>
+      <button type="button" onclick="redirectToSubscription()">
         Go to Subscription Page
       </button>
     </div>
   </form>
 
-  <!-- FOOTER with brand contact details -->
+  <!-- FOOTER -->
   <footer>
     <p>&copy; 2025 University of Southern Queensland. All rights reserved.</p>
     <p>Contact: (07) 4631 2100 | <a href="https://usq.edu.au" target="_blank">usq.edu.au</a></p>
   </footer>
 
   <!-- 
-    =================================================
+    ==========================================================
     JAVASCRIPT (Inlined for FAST load)
-    - Toggle standard/deep cleaning
-    - Toggle info popups
-    - Handle progress bar
-    - Submission constraints (photo & submission count)
-    - Reset form
-    - Redirect to subscription
-    =================================================
+    - Toggling Standard/Deep tasks
+    - Toggling "Mark Done" check state
+    - Photo upload / remove
+    - Info popup
+    - Submission constraints
+    - Progress bar
+    - Reset checklist
+    - Subscription redirect
+    ==========================================================
   -->
   <script>
-    // Track standard vs. deep cleaning for each area
+    // Track area modes (standard/deep)
     const areaModes = {
       classrooms: 'standard',
       offices: 'standard',
       restrooms: 'standard'
     };
 
-    // Toggle between Standard/Deep
+    // Toggle between standard & deep tables
     function toggleArea(areaId) {
-      const std = document.getElementById(areaId + 'Standard');
-      const deep = document.getElementById(areaId + 'Deep');
+      const stdTable = document.getElementById(areaId + 'Standard');
+      const deepTable = document.getElementById(areaId + 'Deep');
+
       if (areaModes[areaId] === 'standard') {
-        std.style.display = 'none';
-        deep.style.display = 'table';
+        stdTable.style.display = 'none';
+        deepTable.style.display = 'table';
         areaModes[areaId] = 'deep';
         event.target.textContent = 'Switch to Standard Cleaning';
       } else {
-        std.style.display = 'table';
-        deep.style.display = 'none';
+        stdTable.style.display = 'table';
+        deepTable.style.display = 'none';
         areaModes[areaId] = 'standard';
         event.target.textContent = 'Switch to Deep Cleaning';
       }
       updateProgress();
     }
 
-    // Toggle info popup
+    // Toggle "Mark Done" check style
+    function toggleTaskCheck(btn) {
+      btn.classList.toggle('checked');
+      if (btn.classList.contains('checked')) {
+        btn.textContent = '✓ Done';
+      } else {
+        btn.textContent = 'Mark Done';
+      }
+      updateProgress();
+    }
+
+    // Show or hide info popup
     function toggleInfoPopup(popupId) {
       const popup = document.getElementById(popupId);
-      if (popup.style.display === 'none' || popup.style.display === '') {
+      if (popup.style.display === 'none' || !popup.style.display) {
         popup.style.display = 'block';
       } else {
         popup.style.display = 'none';
       }
     }
 
-    // PROGRESS BAR
-    const checkboxes = document.querySelectorAll('.task-check');
-    const progressFill = document.getElementById('progressFill');
-
-    checkboxes.forEach(cb => {
-      cb.addEventListener('change', updateProgress);
-    });
-
-    function updateProgress() {
-      let total = checkboxes.length;
-      let completed = 0;
-      checkboxes.forEach(c => {
-        if (c.checked) completed++;
-      });
-      let percent = total > 0 ? (completed / total) * 100 : 0;
-      progressFill.style.width = percent + '%';
+    // Show filename after uploading
+    function showFileName(input, displayId) {
+      const displayElem = document.getElementById(displayId);
+      if (input.files && input.files.length > 0) {
+        displayElem.textContent = 'File: ' + input.files[0].name;
+      } else {
+        displayElem.textContent = '';
+      }
     }
 
-    // RESET FORM
-    function resetForm() {
-      // Uncheck boxes
-      checkboxes.forEach(cb => {
-        cb.checked = false;
+    // Remove file from upload input
+    function removeFile(inputName, displayId) {
+      const form = document.getElementById('cleaningChecklistForm');
+      const fileInput = form.querySelector(`input[name="${inputName}"]`);
+      if (fileInput) {
+        fileInput.value = '';
+      }
+      const displayElem = document.getElementById(displayId);
+      if (displayElem) {
+        displayElem.textContent = '';
+      }
+    }
+
+    // PROGRESS BAR: track total tasks vs done
+    function updateProgress() {
+      // Count all "Mark Done" buttons that are .checked
+      const allTasks = document.querySelectorAll('.task-check-button');
+      const doneTasks = document.querySelectorAll('.task-check-button.checked');
+      let total = allTasks.length;
+      let completed = doneTasks.length;
+      let percent = total ? (completed / total) * 100 : 0;
+      document.getElementById('progressBarFill').style.width = percent + '%';
+    }
+
+    // RESET: Clear all states
+    function resetChecklist() {
+      // Uncheck all task buttons
+      const allButtons = document.querySelectorAll('.task-check-button');
+      allButtons.forEach(btn => {
+        btn.classList.remove('checked');
+        btn.textContent = 'Mark Done';
       });
-      // Clear textareas
+
+      // Clear all textareas
       const textareas = document.querySelectorAll('.comment-box');
-      textareas.forEach(ta => ta.value = '');
-      // Clear file uploads
-      const files = document.querySelectorAll('.file-upload');
-      files.forEach(f => { f.value = ''; });
-      // Reset area toggles
-      for (let key in areaModes) {
-        areaModes[key] = 'standard';
-        document.getElementById(key + 'Standard').style.display = 'table';
-        document.getElementById(key + 'Deep').style.display = 'none';
+      textareas.forEach(t => t.value = '');
+
+      // Clear all file inputs
+      const fileInputs = document.querySelectorAll('input[type="file"]');
+      fileInputs.forEach(f => f.value = '');
+      const chosenDisplays = document.querySelectorAll('.file-chosen');
+      chosenDisplays.forEach(d => d.textContent = '');
+
+      // Reset toggles to standard
+      for (let areaId in areaModes) {
+        areaModes[areaId] = 'standard';
+        document.getElementById(areaId + 'Standard').style.display = 'table';
+        document.getElementById(areaId + 'Deep').style.display = 'none';
       }
       // Reset toggle button text
       const toggleButtons = document.querySelectorAll('.toggle-btn');
       toggleButtons.forEach(btn => {
         btn.textContent = 'Switch to Deep Cleaning';
       });
-      // Hide all popups
+
+      // Hide info popups
       const popups = document.querySelectorAll('.info-popup');
       popups.forEach(p => p.style.display = 'none');
+
       // Update progress
       updateProgress();
     }
 
     // SUBSCRIPTION PAGE REDIRECT
-    function goToSubscription() {
+    function redirectToSubscription() {
       window.location.href = 'https://sprucesaustralia.github.io/subscribepage/index.html';
     }
 
-    // Handle form submission constraints
+    // FORM SUBMISSION constraints
     const form = document.getElementById('cleaningChecklistForm');
     form.addEventListener('submit', function(e) {
       // 1) Check if any file is uploaded
-      const fileUploads = document.querySelectorAll('.file-upload');
+      const fileInputs = document.querySelectorAll('input[type="file"]');
       let hasPhoto = false;
-      fileUploads.forEach(upload => {
-        if (upload.files && upload.files.length > 0) {
+      fileInputs.forEach(fi => {
+        if (fi.files && fi.files.length > 0) {
           hasPhoto = true;
         }
       });
-      // If has photo => free tier does not allow => redirect
+      // If has photo => not allowed in free tier => redirect
       if (hasPhoto) {
         e.preventDefault();
-        goToSubscription();
+        redirectToSubscription();
         return;
       }
 
-      // 2) Check submission count from localStorage
+      // 2) Check localStorage submission count
       let submissionCount = localStorage.getItem('usq_submissions') || 0;
       submissionCount = parseInt(submissionCount, 10);
 
       if (submissionCount >= 50) {
-        // Over free tier limit => redirect
+        // Over limit => redirect
         e.preventDefault();
-        goToSubscription();
+        redirectToSubscription();
       } else {
-        // Otherwise, let them submit, increment count
+        // Otherwise allow form to submit, increment
         localStorage.setItem('usq_submissions', submissionCount + 1);
       }
     });
 
-    // Initialize progress on load
+    // Initialize progress on page load
     updateProgress();
   </script>
 </body>
