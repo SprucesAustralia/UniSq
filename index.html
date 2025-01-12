@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>University of Southern Queensland - AI Powered Cleaning Checklist</title>
+  <!-- 
+    -----------------------------------------------
+    BRANDING & STYLE
+    - Color scheme derived from USQ’s logo:
+      ~ Gold/Orange: #F8AB23
+      ~ Purple: #4F2B7C
+      ~ Neutral/dark text: #333333
+    - Font: (Approx.) 'Open Sans', sans-serif 
+      (Adjust as needed or import the actual USQ brand font if available.)
+    -----------------------------------------------
+  -->
+  <style>
+    /* Base Reset & Box-Sizing */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: #333333;
+      background-color: #ffffff;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: #ffffff; /* Matches site branding background */
+      border-bottom: 2px solid #F8AB23; /* A subtle line in the brand color */
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* USQ Logo/Branding Title */
+    .brand-container {
+      display: flex;
+      align-items: center;
+    }
+    .brand-logo {
+      /* Placeholder if you want to insert an actual image or brand icon */
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #F8AB23;
+      margin-right: 1rem;
+    }
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4F2B7C;
+    }
+
+    /* Intro Section */
+    .intro {
+      padding: 1rem;
+      background-color: #F8AB23;
+      color: #ffffff;
+      text-align: center;
+    }
+    .intro h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .intro p {
+      font-size: 1rem;
+    }
+
+    /* Main Form Container */
+    .checklist-form {
+      width: 90%;
+      max-width: 800px;
+      margin: 1rem auto;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    /* Area Section */
+    .area-section {
+      margin-bottom: 2rem;
+    }
+    .area-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .area-header h3 {
+      font-size: 1.25rem;
+      color: #4F2B7C;
+    }
+    .toggle-button {
+      background-color: #4F2B7C;
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .toggle-button:hover {
+      background-color: #3A2156;
+    }
+
+    /* Task Table / Lists */
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0.5rem;
+    }
+    .task-table th,
+    .task-table td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      vertical-align: top;
+    }
+    .task-table th {
+      background-color: #F8AB23;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+    .task-table td {
+      font-size: 1rem; /* Make tasks bigger and easy to read */
+    }
+    .comment-box {
+      width: 100%;
+      height: 60px;
+      resize: vertical;
+    }
+
+    /* File upload area */
+    .upload-label {
+      margin-top: 0.5rem;
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #333333;
+    }
+    .file-upload {
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Recommendations & Avoidances */
+    .tips-container {
+      display: flex;
+      gap: 2rem;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 4px;
+    }
+    .tips-subcontainer {
+      flex: 1;
+    }
+    .tips-subcontainer h4 {
+      font-size: 0.875rem;
+      color: #4F2B7C;
+      margin-bottom: 0.5rem;
+    }
+    .tips-subcontainer ul {
+      list-style: disc;
+      margin-left: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .progress-bar-fill {
+      height: 20px;
+      width: 0%;
+      background-color: #4F2B7C;
+      transition: width 0.3s ease;
+    }
+
+    /* Submission Buttons */
+    .form-actions {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .submit-btn,
+    .reset-btn {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background-color: #4F2B7C;
+      color: #ffffff;
+    }
+    .submit-btn:hover {
+      background-color: #3A2156;
+    }
+    .reset-btn {
+      background-color: #F8AB23;
+      color: #ffffff;
+    }
+    .reset-btn:hover {
+      background-color: #C67E1B;
+    }
+
+    /* Disclaimer / Footer */
+    .disclaimer {
+      font-size: 0.875rem;
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      color: #4F2B7C;
+    }
+    .disclaimer button {
+      background-color: #4F2B7C;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .disclaimer button:hover {
+      background-color: #3A2156;
+    }
+
+    /* Bottom contact details - brand info */
+    footer {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #555555;
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f2f2f2;
+    }
+
+    /* Responsive Media Query */
+    @media (max-width: 600px) {
+      .brand-title {
+        font-size: 1.2rem;
+      }
+      .toggle-button {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .tips-container {
+        flex-direction: column;
+      }
+      .tips-subcontainer {
+        margin-bottom: 1rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER WITH BRANDING -->
+  <header>
+    <div class="brand-container">
+      <!-- brand-logo is a placeholder; replace with an actual <img> if needed -->
+      <div class="brand-logo"></div>
+      <div class="brand-title">University of Southern Queensland</div>
+    </div>
+  </header>
+
+  <!-- INTRODUCTION -->
+  <section class="intro">
+    <h2>AI Powered Cleaning Checklist</h2>
+    <p>Keep your campus areas spotless with our advanced, easy-to-use cleaning checklist.</p>
+  </section>
+
+  <!-- MAIN FORM -->
+  <!-- 
+    5) Form Submission:
+    Using Formspree endpoint: https://formspree.io/f/xeoovlzy
+    method=POST, enctype=multipart/form-data
+  -->
+  <form class="checklist-form" id="cleaningChecklistForm"
+        action="https://formspree.io/f/xeoovlzy"
+        method="POST"
+        enctype="multipart/form-data">
+    
+    <!-- Hidden input to track submission count if desired (or use localStorage via JS) -->
+    <input type="hidden" name="_subject" value="New Cleaning Checklist Submission" />
+    
+    <!-- 
+      2) TYPE OF FACILITY = University
+      We'll create 3 areas for a University setting (example):
+      1. Classrooms
+      2. Offices
+      3. Restrooms
+      Each area has a toggle between Standard & Deep cleaning tasks 
+    -->
+
+    <!-- CLASSROOMS AREA -->
+    <div class="area-section" id="classroomsArea">
+      <div class="area-header">
+        <h3>Classrooms</h3>
+        <button type="button" class="toggle-button" 
+                onclick="toggleCleaningType('classrooms')">
+          Switch to Deep Cleaning
+        </button>
+      </div>
+
+      <!-- Standard Cleaning Table -->
+      <table class="task-table" id="classroomsStandard" style="display: table;">
+        <thead>
+          <tr>
+            <th>Standard Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- EXAMPLE tasks for a university classroom Standard cleaning -->
+          <tr>
+            <td>Wipe desks and chairs</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_standard_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Vacuum floor</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_standard_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Clean whiteboards</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_standard_task3"></textarea></td>
+          </tr>
+          <tr>
+            <td>Empty trash bins</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_standard_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Disinfect door handles</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_standard_task5"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Deep Cleaning Table -->
+      <table class="task-table" id="classroomsDeep" style="display: none;">
+        <thead>
+          <tr>
+            <th>Deep Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Standard tasks can remain or repeated if needed, plus 3 extra deep tasks. 
+               For simplicity, let's show them all in the Deep view, or just the extra ones. 
+          -->
+          <tr>
+            <td>Wipe desks and chairs (detailed)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Vacuum + shampoo carpets/floors</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Clean walls and windows thoroughly</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task3"></textarea></td>
+          </tr>
+          <!-- Extra Deep tasks -->
+          <tr>
+            <td>Steam cleaning or sanitizing surfaces</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Disinfect all high-contact technology (keyboards, etc.)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task5"></textarea></td>
+          </tr>
+          <tr>
+            <td>Deep wipe & polish of tables/desks</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="classrooms_deep_task6"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Single file upload for this area (applies to whichever cleaning type is selected) -->
+      <label class="upload-label">Upload Photo (Classrooms):</label><br />
+      <input class="file-upload" type="file" name="classrooms_photo" accept="image/*" />
+
+      <!-- Additional Recommendations Box -->
+      <div class="tips-container">
+        <div class="tips-subcontainer">
+          <h4>Top 2 Recommendations</h4>
+          <ul>
+            <li>Encourage minimal personal belongings to ease cleaning</li>
+            <li>Use gentle disinfectants to avoid strong chemical odors</li>
+          </ul>
+        </div>
+        <div class="tips-subcontainer">
+          <h4>2 Things to Avoid</h4>
+          <ul>
+            <li>Overlooking corners and underside of desks</li>
+            <li>Using the same cloth for desk and floor cleaning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- END CLASSROOMS AREA -->
+
+
+    <!-- OFFICES AREA -->
+    <div class="area-section" id="officesArea">
+      <div class="area-header">
+        <h3>Offices</h3>
+        <button type="button" class="toggle-button"
+                onclick="toggleCleaningType('offices')">
+          Switch to Deep Cleaning
+        </button>
+      </div>
+
+      <!-- Standard Cleaning Table -->
+      <table class="task-table" id="officesStandard" style="display: table;">
+        <thead>
+          <tr>
+            <th>Standard Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dust all surfaces (desks, shelves)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_standard_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Vacuum carpets / Mop floors</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_standard_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Wipe telephones and electronics</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_standard_task3"></textarea></td>
+          </tr>
+          <tr>
+            <td>Empty trash bins</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_standard_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Clean door handles and light switches</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_standard_task5"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Deep Cleaning Table -->
+      <table class="task-table" id="officesDeep" style="display: none;">
+        <thead>
+          <tr>
+            <th>Deep Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Disinfect desktops thoroughly</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Clean windows (interior)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Polish furniture (tables, cabinets)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task3"></textarea></td>
+          </tr>
+          <!-- Extra Deep tasks -->
+          <tr>
+            <td>Sanitize computer keyboards and screens</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Vacuum & sanitize upholstery (chairs/sofas)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task5"></textarea></td>
+          </tr>
+          <tr>
+            <td>Thorough corner-to-corner floor cleaning</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="offices_deep_task6"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label class="upload-label">Upload Photo (Offices):</label><br />
+      <input class="file-upload" type="file" name="offices_photo" accept="image/*" />
+
+      <!-- Additional Recommendations Box -->
+      <div class="tips-container">
+        <div class="tips-subcontainer">
+          <h4>Top 2 Recommendations</h4>
+          <ul>
+            <li>Use eco-friendly cleaning products</li>
+            <li>Encourage staff to maintain clean desk policies</li>
+          </ul>
+        </div>
+        <div class="tips-subcontainer">
+          <h4>2 Things to Avoid</h4>
+          <ul>
+            <li>Using harsh chemicals on electronics</li>
+            <li>Ignoring high-traffic areas (doorways, halls)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- END OFFICES AREA -->
+
+
+    <!-- RESTROOMS AREA -->
+    <div class="area-section" id="restroomsArea">
+      <div class="area-header">
+        <h3>Restrooms</h3>
+        <button type="button" class="toggle-button"
+                onclick="toggleCleaningType('restrooms')">
+          Switch to Deep Cleaning
+        </button>
+      </div>
+
+      <!-- Standard Cleaning Table -->
+      <table class="task-table" id="restroomsStandard" style="display: table;">
+        <thead>
+          <tr>
+            <th>Standard Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clean sinks and counters</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_standard_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Disinfect toilets and urinals</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_standard_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Mop floors</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_standard_task3"></textarea></td>
+          </tr>
+          <tr>
+            <td>Refill soap and paper dispensers</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_standard_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Empty sanitary bins</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_standard_task5"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Deep Cleaning Table -->
+      <table class="task-table" id="restroomsDeep" style="display: none;">
+        <thead>
+          <tr>
+            <th>Deep Cleaning Tasks</th>
+            <th>Done</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Descale toilets and urinals</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task1"></textarea></td>
+          </tr>
+          <tr>
+            <td>Steam clean floors and wall tiles</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task2"></textarea></td>
+          </tr>
+          <tr>
+            <td>Sanitize partitions and doors thoroughly</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task3"></textarea></td>
+          </tr>
+          <!-- Extra Deep tasks -->
+          <tr>
+            <td>Clean vent covers and ceiling fixtures</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task4"></textarea></td>
+          </tr>
+          <tr>
+            <td>Polish metal surfaces (faucets, handles)</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task5"></textarea></td>
+          </tr>
+          <tr>
+            <td>Check for mold and mildew in hidden corners</td>
+            <td><input type="checkbox" class="task-checkbox" /></td>
+            <td><textarea class="comment-box" name="restrooms_deep_task6"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label class="upload-label">Upload Photo (Restrooms):</label><br />
+      <input class="file-upload" type="file" name="restrooms_photo" accept="image/*" />
+
+      <!-- Additional Recommendations Box -->
+      <div class="tips-container">
+        <div class="tips-subcontainer">
+          <h4>Top 2 Recommendations</h4>
+          <ul>
+            <li>Use color-coded cleaning tools for sanitary areas</li>
+            <li>Display wet floor signs to prevent slips</li>
+          </ul>
+        </div>
+        <div class="tips-subcontainer">
+          <h4>2 Things to Avoid</h4>
+          <ul>
+            <li>Mixing cleaning chemicals (dangerous fumes)</li>
+            <li>Overlooking regular checks for supplies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- END RESTROOMS AREA -->
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+
+    <!-- SUBMIT & RESET BUTTONS -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn">
+        &#10003; Submit Checklist
+      </button>
+      <button type="button" class="reset-btn" onclick="resetChecklist()">
+        &#10007; Reset Checklist
+      </button>
+    </div>
+
+    <!-- DISCLAIMER / FREE TIER NOTICE -->
+    <div class="disclaimer">
+      <p>Under the free subscription, you only get <strong>3 submissions per month</strong>. If you’d like to increase your limit and unlock more features, please subscribe.</p>
+      <button type="button" onclick="subscribeRedirect()">Go to Subscription Page</button>
+    </div>
+
+  </form>
+
+  <!-- FOOTER / CONTACT DETAILS -->
+  <footer>
+    <p>&copy; 2025 University of Southern Queensland. All rights reserved.</p>
+    <p>Contact us at (07) 4631 2100 or visit <a href="https://usq.edu.au" target="_blank">usq.edu.au</a></p>
+  </footer>
+
+  <!-- 
+    -----------------------------------------------
+    JAVASCRIPT SECTION
+    - Toggling Standard vs. Deep Cleaning
+    - Updating the progress bar
+    - Handling submission count
+    - Resetting the checklist
+    -----------------------------------------------
+  -->
+  <script>
+    // Track standard vs deep cleaning mode for each area
+    const cleaningModes = {
+      classrooms: 'standard',
+      offices: 'standard',
+      restrooms: 'standard'
+    };
+
+    function toggleCleaningType(areaId) {
+      const standardTable = document.getElementById(areaId + 'Standard');
+      const deepTable = document.getElementById(areaId + 'Deep');
+      if (cleaningModes[areaId] === 'standard') {
+        // Switch to deep
+        standardTable.style.display = 'none';
+        deepTable.style.display = 'table';
+        cleaningModes[areaId] = 'deep';
+        // Change button text
+        event.target.textContent = 'Switch to Standard Cleaning';
+      } else {
+        // Switch to standard
+        standardTable.style.display = 'table';
+        deepTable.style.display = 'none';
+        cleaningModes[areaId] = 'standard';
+        event.target.textContent = 'Switch to Deep Cleaning';
+      }
+      updateProgress(); // Recalculate progress since tasks might change
+    }
+
+    // PROGRESS BAR LOGIC
+    const checkboxes = document.querySelectorAll('.task-checkbox');
+    const progressBarFill = document.getElementById('progressBarFill');
+
+    // Listen to changes on all checkboxes
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateProgress);
+    });
+
+    function updateProgress() {
+      const totalTasks = checkboxes.length;
+      let checkedTasks = 0;
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          checkedTasks++;
+        }
+      });
+      const percent = totalTasks > 0 ? (checkedTasks / totalTasks) * 100 : 0;
+      progressBarFill.style.width = percent + '%';
+    }
+
+    // RESET CHECKLIST
+    function resetChecklist() {
+      // Clear all checkboxes
+      checkboxes.forEach(cb => cb.checked = false);
+      // Clear all textareas
+      const textareas = document.querySelectorAll('.comment-box');
+      textareas.forEach(ta => ta.value = '');
+      // Clear all file inputs
+      const fileInputs = document.querySelectorAll('.file-upload');
+      fileInputs.forEach(fi => fi.value = '');
+      // Reset all toggles back to standard
+      for (let area in cleaningModes) {
+        cleaningModes[area] = 'standard';
+        document.getElementById(area + 'Standard').style.display = 'table';
+        document.getElementById(area + 'Deep').style.display = 'none';
+      }
+      // Update toggle button text
+      const toggleButtons = document.querySelectorAll('.toggle-button');
+      toggleButtons.forEach(btn => {
+        btn.textContent = 'Switch to Deep Cleaning';
+      });
+      // Reset progress bar
+      updateProgress();
+    }
+
+    // SIMPLE SUBSCRIPTION REDIRECT LOGIC
+    // This is a simplistic approach using localStorage to track submissions.
+    // In real usage, you'd likely track server-side or rely on formspree data.
+    function subscribeRedirect() {
+      window.location.href = "https://sprucesaustralia.github.io/subscribepage/index.html";
+    }
+
+    const form = document.getElementById('cleaningChecklistForm');
+    form.addEventListener('submit', function(e) {
+      // We do a simple localStorage check
+      let submissionCount = localStorage.getItem('submissionCount') || 0;
+      submissionCount = parseInt(submissionCount, 10);
+
+      if (submissionCount >= 3) {
+        // Already used free tier, redirect to subscription
+        e.preventDefault();
+        window.location.href = "https://sprucesaustralia.github.io/subscribepage/index.html";
+      } else {
+        // Let them submit, then increment
+        localStorage.setItem('submissionCount', submissionCount + 1);
+      }
+    });
+
+    // Initialize progress on page load
+    updateProgress();
+  </script>
+</body>
+</html>
